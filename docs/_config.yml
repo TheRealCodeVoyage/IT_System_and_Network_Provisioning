@@ -9,7 +9,7 @@ description: >-
 # theme's CSS and all internal links will 404 on the published site.
 # If you name the repo something other than "2026-fall-ITSNP", change this.
 # (For a user/organization site at <user>.github.io, set baseurl to "".)
-baseurl: "/2026-fall-ITSNP"
+baseurl: "/IT_System_and_Network_Provisioning"
 
 # Slate shows .zip/.tar.gz download buttons by default — off for a course site.
 show_downloads: false
