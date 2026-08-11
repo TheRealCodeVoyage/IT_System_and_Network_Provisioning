@@ -1,0 +1,21 @@
+theme: jekyll-theme-slate
+
+title: ACIT 4640 Labs
+description: >-
+  Labs and flipped-material readings for BCIT ACIT 4640 —
+  IT Systems and Network Provisioning.
+
+# IMPORTANT: baseurl must match your GitHub repository name exactly, or the
+# theme's CSS and all internal links will 404 on the published site.
+# If you name the repo something other than "2026-fall-ITSNP", change this.
+# (For a user/organization site at <user>.github.io, set baseurl to "".)
+baseurl: "/2026-fall-ITSNP"
+
+# Slate shows .zip/.tar.gz download buttons by default — off for a course site.
+show_downloads: false
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

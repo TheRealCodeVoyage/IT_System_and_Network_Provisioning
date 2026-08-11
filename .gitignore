@@ -1,0 +1,54 @@
+# ---------------------------------------------------------------------------
+# ACIT 4640 — files that must NEVER be committed to a public repository.
+#
+# Anything matched here stays on your machine only. Git never tracks it, so it
+# cannot reach GitHub even though it lives inside the repo folder.
+#
+# Before the first push, verify with:  git status --ignored
+# ---------------------------------------------------------------------------
+
+# --- Assessment material (quizzes contain inline ANSWER KEYS) ---
+*Quiz*.md
+*Quiz*.pdf
+*Quiz*.docx
+*Test*.md
+*Test*.pdf
+*Test*.docx
+*Exam*.md
+*Exam*.pdf
+*Exam*.docx
+*Midterm*
+*Final*
+*Answer*
+*_Key.*
+*Solution*
+*Solutions*
+
+# --- Slides (not published to the site) ---
+*.pptx
+*.potx
+*.ppt
+*.key
+
+# --- Internal planning / instructor-only documents ---
+ACIT4640_Notes_Timeline_Mapping.md
+ACIT4640_Fall2026_Incus_Packer_Change_Plan.md
+ACIT4640_Course_Outline.md
+
+# --- Jekyll build artifacts ---
+docs/_site/
+docs/.jekyll-cache/
+docs/.jekyll-metadata
+docs/vendor/
+.bundle/
+Gemfile.lock
+
+# --- OS / editor cruft ---
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*~
