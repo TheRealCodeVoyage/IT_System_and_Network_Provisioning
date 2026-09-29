@@ -23,6 +23,9 @@
 *_Key.*
 *Solution*
 *Solutions*
+*.csv
+*.tsv
+*.pdf
 
 # --- Slides (not published to the site) ---
 *.pptx
