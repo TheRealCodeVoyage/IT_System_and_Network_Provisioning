@@ -1,0 +1,129 @@
+<!--
+  Site-wide additions, injected into <head> of every page by the Slate theme.
+  Adds a "Copy" button to every fenced code block.
+-->
+<style>
+  .code-copy-wrap { position: relative; }
+  .code-copy-wrap pre { padding-right: 76px; }
+
+  .code-copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    font: 600 11px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    letter-spacing: .02em;
+    color: #555;
+    background: rgba(255, 255, 255, .92);
+    border: 1px solid #d8d8d8;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(-2px);
+    transition: opacity .18s ease, transform .18s ease, color .18s ease,
+                border-color .18s ease, background-color .18s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .code-copy-wrap:hover .code-copy-btn,
+  .code-copy-btn:focus-visible,
+  .code-copy-btn.is-copied {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .code-copy-btn:hover { color: #222; border-color: #b5b5b5; background: #fff; }
+  .code-copy-btn:active { transform: scale(.96); }
+  .code-copy-btn:focus-visible { outline: 2px solid #4183c4; outline-offset: 2px; }
+
+  .code-copy-btn svg { width: 13px; height: 13px; flex: none; }
+  .code-copy-btn .icon-check { display: none; }
+  .code-copy-btn.is-copied { color: #1a7f37; border-color: #8fd19e; background: #f0fff4; }
+  .code-copy-btn.is-copied .icon-copy { display: none; }
+  .code-copy-btn.is-copied .icon-check { display: block; animation: code-copy-pop .28s ease-out; }
+
+  @keyframes code-copy-pop {
+    0%   { transform: scale(.5); opacity: 0; }
+    70%  { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); }
+  }
+
+  /* Touch screens have no hover: keep the button visible. */
+  @media (hover: none) {
+    .code-copy-btn { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .code-copy-btn, .code-copy-btn .icon-check { transition: none; animation: none; }
+  }
+  @media print {
+    .code-copy-btn { display: none; }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var COPY_ICON =
+      '<svg class="icon-copy" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path fill="currentColor" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>';
+    var CHECK_ICON =
+      '<svg class="icon-check" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/></svg>';
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      // Fallback for older browsers / non-HTTPS previews.
+      return new Promise(function (resolve, reject) {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.setAttribute("readonly", "");
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy") ? resolve() : reject(); }
+        catch (e) { reject(e); }
+        finally { document.body.removeChild(ta); }
+      });
+    }
+
+    document.querySelectorAll("pre").forEach(function (pre) {
+      // Wrap the outermost highlight container (or the bare <pre>) so the
+      // button stays pinned while long lines scroll horizontally.
+      var host = pre.closest("div.highlighter-rouge") || pre;
+      if (host.parentElement && host.parentElement.classList.contains("code-copy-wrap")) return;
+
+      var wrap = document.createElement("div");
+      wrap.className = "code-copy-wrap";
+      host.parentNode.insertBefore(wrap, host);
+      wrap.appendChild(host);
+
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "code-copy-btn";
+      btn.setAttribute("aria-label", "Copy code to clipboard");
+      btn.innerHTML = COPY_ICON + CHECK_ICON + '<span class="code-copy-label">Copy</span>';
+      var label = btn.querySelector(".code-copy-label");
+      var timer;
+
+      btn.addEventListener("click", function () {
+        var code = pre.querySelector("code") || pre;
+        copyText(code.innerText.replace(/\n$/, "")).then(function () {
+          btn.classList.add("is-copied");
+          label.textContent = "Copied";
+          btn.setAttribute("aria-label", "Copied");
+        }, function () {
+          label.textContent = "Press Ctrl+C";
+        });
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          btn.classList.remove("is-copied");
+          label.textContent = "Copy";
+          btn.setAttribute("aria-label", "Copy code to clipboard");
+        }, 1800);
+      });
+
+      wrap.appendChild(btn);
+    });
+  });
+</script>

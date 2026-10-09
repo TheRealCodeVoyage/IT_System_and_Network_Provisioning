@@ -95,6 +95,36 @@ Wait a minute for Cloud-Init to run, then visit the instance's public IP in a br
 
 ---
 
+## Verify your work
+
+Confirm the instance is running and was launched from the AMI that Packer built.
+
+**1. Check the instance.** Replace `<instance-id>` with your instance ID.
+
+```bash
+aws ec2 describe-instances \
+  --instance-ids <instance-id> \
+  --query "Reservations[].Instances[].[InstanceId,State.Name,PublicIpAddress,ImageId]" \
+  --output table
+```
+
+Expected: the state is `running`, a public IP is listed, and an `ImageId` (`ami-...`) is shown.
+
+**2. Check the AMI.** Use the `ImageId` from the previous output.
+
+```bash
+aws ec2 describe-images \
+  --image-ids <ami-id> \
+  --query "Images[].[ImageId,Name,State]" \
+  --output table
+```
+
+Expected: the AMI name starts with `acit4640-nginx-` and the state is `available`.
+
+The `ImageId` from step 1 must match the `ImageId` in step 2. This confirms the instance was launched from your Packer-built AMI.
+
+---
+
 ## Cleanup
 
 ```bash
@@ -106,7 +136,7 @@ aws ec2 terminate-instances --instance-ids <instance-id>
 ```bash
 aws ec2 deregister-image --image-id "$AMI_ID"
 aws ec2 describe-snapshots --owner-ids self \
-  --query "Snapshots[?Description contains 'acit4640-nginx'].SnapshotId" --output text
+  --query "Snapshots[?contains(Description , '$AMI_ID')].SnapshotId" --output text
 aws ec2 delete-snapshot --snapshot-id <snapshot-id-from-above>
 ```
 Deregistering an AMI does **not** automatically delete its snapshot — leaving orphaned snapshots is a common source of surprise storage charges.
