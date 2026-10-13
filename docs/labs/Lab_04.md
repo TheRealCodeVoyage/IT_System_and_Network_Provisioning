@@ -73,7 +73,7 @@ resource "aws_security_group" "lab4_sg" {
 
 resource "aws_instance" "lab4_web" {
   ami                    = "ami-xxxxxxxxxxxxxxxxx" # a recent Ubuntu 22.04 AMI in us-west-2
-  instance_type          = "t2.micro"
+  instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.lab4_sg.id]
 
   tags = {

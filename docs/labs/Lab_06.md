@@ -11,7 +11,7 @@ Today you'll set up a control node, target one or more managed nodes over SSH, r
 
 ## Prerequisites
 - A control machine (your WSL/Linux environment) with Python 3 installed.
-- At least one managed node reachable over SSH (a Lab 3/4 EC2 instance works well — reuse one, or launch a fresh `t2.micro`).
+- At least one managed node reachable over SSH (a Lab 3/4 EC2 instance works well — reuse one, or launch a fresh `t3.micro`).
 - Passwordless SSH (key-based) already working to the managed node — reuse your `~/.ssh/config` setup from Lab 2.
 
 ---

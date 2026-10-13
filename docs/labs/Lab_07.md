@@ -49,7 +49,7 @@ variable "instance_name" {
 variable "instance_type" {
   type        = string
   description = "EC2 instance type to launch"
-  default     = "t2.micro"
+  default     = "t3.micro"
 }
 
 variable "allowed_ssh_cidr" {
@@ -103,7 +103,7 @@ output "public_ip" {
 }
 ```
 
-Notice this is exactly Lab 4's security group and instance — the only change is that every value that used to be hardcoded (`acit4640-lab4-sg`, `t2.micro`, the tag name) is now a variable.
+Notice this is exactly Lab 4's security group and instance — the only change is that every value that used to be hardcoded (`acit4640-lab4-sg`, `t3.micro`, the tag name) is now a variable.
 
 ---
 
@@ -130,14 +130,14 @@ provider "aws" {
 module "web_a" {
   source            = "./modules/web_instance"
   instance_name     = "lab7-web-a"
-  instance_type     = "t2.micro"
+  instance_type     = "t3.micro"
   allowed_ssh_cidr  = "YOUR_IP_HERE/32"
 }
 
 module "web_b" {
   source            = "./modules/web_instance"
   instance_name     = "lab7-web-b"
-  instance_type     = "t3.micro"
+  instance_type     = "t3.small"
   allowed_ssh_cidr  = "YOUR_IP_HERE/32"
 }
 

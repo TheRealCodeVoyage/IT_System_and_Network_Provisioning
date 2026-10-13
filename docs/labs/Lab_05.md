@@ -35,7 +35,7 @@ packer {
 
 source "amazon-ebs" "ubuntu" {
   ami_name      = "acit4640-nginx-{{timestamp}}"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
   region        = "us-west-2"
   source_ami_filter {
     filters = {
@@ -90,7 +90,7 @@ AMI_ID=<the AMI ID your instructor provided, or your own from the optional stret
 
 aws ec2 run-instances \
   --image-id "$AMI_ID" \
-  --instance-type t2.micro \
+  --instance-type t3.micro \
   --key-name my_aws_key \
   --security-group-ids <your-SG-from-Lab-3> \
   --subnet-id <your-subnet-from-Lab-3> \

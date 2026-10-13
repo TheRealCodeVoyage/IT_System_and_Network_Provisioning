@@ -103,7 +103,7 @@ AMI_ID=$(aws ec2 describe-images --owners 099720109477 \
   --query 'Images | sort_by(@,&CreationDate) | [-1].ImageId' --output text)
 
 # Launch the instance into your new VPC
-INSTANCE_ID=$(aws ec2 run-instances --image-id "$AMI_ID" --instance-type t2.micro \
+INSTANCE_ID=$(aws ec2 run-instances --image-id "$AMI_ID" --instance-type t3.micro \
   --key-name my_aws_key --security-group-ids "$SG_ID" --subnet-id "$SUBNET_ID" \
   --associate-public-ip-address --count 1 \
   --query 'Instances[0].InstanceId' --output text)
